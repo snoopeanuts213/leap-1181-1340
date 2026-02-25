@@ -1,0 +1,178 @@
+<!doctype HTML>
+<html>
+	<head>
+		<title>
+			LEAP 1181 ~ 1340
+		</title>
+		<style>
+			.main {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%,-50%);
+				width: 100%;
+			}
+			#Q_Text {
+				font-size: 70px;
+				text-align: center;
+				user-select: none;
+				margin-top: 0px;
+			}
+			#A_Text {
+				font-size: 20px;
+				text-align: center;
+				user-select: none;
+			}
+			#A_Input {
+				height: 30ox;
+				font-size: 30px;
+				position: relative;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+			#progress {
+				position: absolute;
+				top: 10%;
+				left: 20%;
+			}
+			#result {
+				visibility: hidden;
+				background-color: #EEE;
+				height: 300px;
+				width: 700px; 
+				opacity: 0.95;
+				border-radius: 30px;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%,-50%);
+				user-select: none;
+			}
+			#result p {
+				text-align: center;
+				font-size: 50px;
+			}
+			#result input {
+				position: relative;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+		</style>
+	</head>
+	<body>
+		<div class="main">
+			<p id="Q_Text"></p>
+			<p id="A_Text">none
+			</p>
+			<form onsubmit="return send();">
+				<input id="A_Input">
+			</form>
+		</div>
+		<div id="result">
+			<p id="R_Text">正答率 : </p>
+			<form onsubmit="return restart();">
+				<input  type="submit" value="もう一度" >
+			</form>
+		</div>
+		<p id="progress"></p>
+		<script>
+			var QText = document.getElementById("Q_Text");
+			var AText = document.getElementById("A_Text");
+			var AInput = document.getElementById("A_Input");
+			var result = document.getElementById("result");
+			var RText = document.getElementById("R_Text");
+			var progress = document.getElementById("progress");
+			var Question	= {
+				all : [""],
+				now : [""]
+			}
+			var fail = 0;
+			var color = ["#FFF","#FFA","#EA0","#B00"];
+			var sent = 0;
+			var finished = 0;
+			var len = 0;
+			function send() {
+				event.preventDefault()
+				sent++;
+				if (AInput.value == Question.now[1]) {
+					finished++;
+					progress.innerHTML = `${finished} / ${len}`;
+					AInput.value = "";
+					AInput.style.backgroundColor = "#FFF";
+					AInput.style.color = "#000";
+					if (Question.all[0].length == 0) {
+						fin()
+					} else {
+						next()
+					}
+				} else {
+					fail++;
+					AInput.value = "";
+					AText.style.visibility = "visible";
+					var ans = "";
+					if (fail == 1) {
+						for (var i = 0; i < Question.now[1].length - 1; i++) ans += "*";
+						ans += Question.now[1].at(ans.length)
+					} else {
+						if (fail == 2) {
+							ans += Question.now[1].at(0)
+							for (var i = 0; i < Question.now[1].length - 2; i++) ans += "*";
+							ans += Question.now[1].at(ans.length)
+						} else {
+							ans = Question.now[1]
+						}
+					}
+					AText.innerHTML = ans;
+					if (fail < 3) {
+						AInput.style.backgroundColor = color[fail];
+					} else {
+						AInput.style.backgroundColor = color[3];
+						AInput.style.color = "#FFF";
+					}
+				}
+			}
+
+			function next() {
+					fail = 0;
+					AInput.style.backgroundColor = "#FFF";
+					AInput.style.color = "#000";
+					var random = Math.floor(Math.random()*Question.all[0].length);
+
+					for (var n = 0; n < 2; n++) {
+						Question.now[n] = Question.all[n][random];
+					}
+
+					Question.all[0].splice(random,1)
+					Question.all[1].splice(random,1)
+					QText.innerHTML = Question.now[0];
+					AText.innerHTML = "none";
+					AText.style.visibility = "hidden";
+			}
+
+			function restart() {
+				event.preventDefault();
+				result.style.visibility = "hidden";
+				start(); 
+			}
+			
+			function start() {
+				finished = 0;
+				sent = 0;
+				Question.all = [
+					["を取り入れる (i)","現れる (e)","展開する (u)","由来する (d)","を生み出す (g)","を所有している (p)","を保持する (r)","を確保する (s)","を捕らえる (c)","を監視する (m)","を調査する (i)","を探知する (d)","調査 (i)","専攻する (s)","学期 (s)","生物学 (b)","生態 (e)","哲学 (p)","地理 (g)","機関 (i)","能力 (f)","中級の (i)","考え (n)","概念 (c)","瞑想 (m)","洞察 (i)","用心 (c)","意志 (w)","選択肢 (o)","見通し (p)","を大切にする (c)","するつもりだ (i)","ではないかと思う (s)","を特定する (i)","を許可する (p)","を認める (a)","AをBだと認識する (p)","を評価する (e)","を耕す (c)","日陰 (s)","そよ風 (b)","砂漠 (d)","霧 (f)","湿気 (m)","湿った (d)","道 (p)","山道 (t)","小川 (s)","潮 (t)","礁 (r)","生息地 (h)","火山 (v)","鉱山 (m)","ツバメ (s)","巣 (w)","蚊 (m)","ウシ (c)","子ネコ (k)","生物 (o)","野生生物 (w)","野獣 (b)","類人猿 (a)","群れ (f)","静脈 (v)","繁殖する (b)","繁殖する (r)","おしゃべりの (t)","真面目な (e)","勤勉な (d)","主要な (p)","最重要な (p)","明確な (d)","明らかな (e)","目立った (p)","際立った (m)","優美さ (g)","魅力 (c)","高級な (f)","理性的な (r)","壮大な (m)","より優れている (s)","忠実な (l)","とてもひどい (h)","悲惨な (m)","退屈な (d)","不快な (n)","正気でない (i)","ばかげた (r)","腐った (r)","悪名高い (n)","悪い (e)","乱雑 (m)","広大な (v)","巨大な (h)","とても小さな (t)","球体 (s)","細長い一片 (s)","管 (v)","内部の (i)","流動的な (m)","険しい (s)","強烈な (i)","避けられない (i)","中立の (n)","手短な (b)","むき出しの (b)","相互の (m)","潜在的な (p)","たくましい (t)","従来の (c)","最高の (s)","に似ている (r)","それどころか (c)","範疇 (c)","範囲 (s)","定められた (g)","固有の (p)","十分な (s)","多くの (n)","かなりの (s)","単位 (u)","直径 (d)","算術 (a)","量 (q)","欠乏 (d)","最大限 (m)","束 (b)","を減らす (l)","時代 (e)","期間 (s)","休止 (p)","1年に1度の (a)","永遠の (e)","最初の (i)","より前の (p)","続いて起こる (s)","その間 (m)","決まりきった仕事 (r)","土産 (s)","れんが (b)","棒 (p)","いたずら (m)","迷信 (s)","貯蔵 (s)","避難所 (s)","衣類 (g)","運河 (c)","戸棚 (c)","出来事 (i)","状況 (c)","を取って来る (f)","を分配する (d)","を購入する (p)","像 (s)","彫刻 (s)","神話 (m)","工芸 (c)","雑誌 (j)","百科事典 (e)","天国 (h)"],
+					["incorporate","emerge","unfold","derive","generate","possess","retain","secure","capture","monitor","investigate","detect","inquiry","specialize","semester","biology","ecology","philosophy","geography","institution","faculty","intermediate","notion","concept","meditation","insight","caution","will","option","prospect","cherish","intend","suspect","identify","permit","acknowledge","perceive","evaluate","cultivate","shade","breeze","desert","fog","moisture","damp","path","trail","stream","tide","reef","habitat","volcano","mine","swallow","web","mosquito","cattle","kitten","organism","wildlife","beast","ape","flock","vein","breed","reproduce","talkative","earnest","diligent","principal","prime","definite","evident","prominent","marked","grace","charm","fancy","rational","magnificent","superior","loyal","horrible","miserable","dull","nasty","insane","ridiculous","rotten","notorious","evil","mess","vast","huge","tiny","sphere","strip","vessel","internal","mobile","steep","intense","inevitable","neutral","brief","bare","mutual","potential","tough","conventional","supreme","resemble","contrary","category","scope","given","peculiar","sufficient","numerous","substantial","unit","diameter","arithmetic","quantity","deficiency","maximum","bunch","lessen","era","session","pause","annual","eternal","initial","prior","subsequent","meanwhile","routine","souvenir","brick","pole","mischief","superstition","storage","shelter","garment","canal","cabinet","incident","circumstance","fetch","distribute","purchase","statue","sculpture","myth","craft","journal","encyclopedia","heaven"]
+				];
+				len = Question.all[0].length;
+				progress.innerHTML = `${finished} / ${len}`;
+				next()
+			}
+
+			function fin() {
+				RText.innerHTML = `正答率 : ${Math.floor(len/sent*1000)/10}%`
+				result.style.visibility = "visible";
+			}
+
+			start()
+		</script>
+	</body>
+</html>
