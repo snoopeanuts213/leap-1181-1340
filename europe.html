@@ -1,0 +1,111 @@
+
+<!doctype HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js"></script>
+		<title>
+			半反応式
+		</title>
+		<style>
+			body {
+				cursor: pointer;
+			}
+			#Q_Text {
+				font-size: 50px;
+				text-align: center;
+			}
+			#A_Text {
+				font-size: 30px;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+			<p id="Q_Text">
+			</p>
+			<p id="A_Text">
+			</p>
+		</div>
+		<script>
+			var QText = document.getElementById("Q_Text");
+			var AText = document.getElementById("A_Text");
+			var keyPush = false;
+			var Question	= {
+				all : [""],
+				now : [""]
+			}
+
+			window.onclick = N
+			
+			window.onkeydown = function (e) {
+				if (!keyPush) {
+					if (e.code == "Space") {
+						keyPush = true;
+						N()
+					}
+				}
+			}
+
+			window.onkeyup = function (e) {
+				if (keyPush) {
+					if (e.code == "Space") {
+						keyPush = false;
+					}
+				}
+			}
+
+			function b(str) {
+				return `\\textcolor{red}{\\ce{${str}}}`
+			}
+
+			function N() {
+				if (AText.innerHTML == "") {
+					AText.innerHTML = `\\(\\ce{${Question.now[1]}}\\)`;
+					renderMathInElement(AText)
+				} else {
+					if (Question.all[0].length == 0) {
+						Question.all = [["過マンガン酸カリウム(酸性)","過マンガン酸カリウム(中・塩基性)","二クロム酸カリウム","ハロゲン(塩素、フッ素など)","酸化マンガン(Ⅳ)", "濃硝酸","希硝酸","熱濃硫酸","オゾン(酸性)","過酸化水素(酸性) ※酸化剤","過酸化水素(中・塩基性) ※酸化剤","二酸化硫黄 ※酸化剤","硫化水素 ※還元剤","シュウ酸","ヨウ化カリウム","塩化スズ(Ⅱ)","硫酸鉄(Ⅱ)","アルカリ金属(1族)","アルカリ土類金属(2族)","過酸化水素 ※還元剤","二酸化硫黄 ※還元剤"],
+											 [
+												`${b("MnO4^-")} + 8H^+ + 5e^- -> ${b("Mn^2+")} + 4H2O`,
+												`${b("MnO4^-")} + 2H2O + 3e^- -> ${b("MnO2")} + 4OH^-`,
+												`${b("Cr2O7^2-")} + 14H^+ + 6e^- -> 2${b("Cr^3+")} + 7H2O`,
+												`${b("Cl2")} + 2e^- -> 2${b("Cl^-")}`,
+												`${b("MnO2")} + 4H^+ + 2e^- -> ${b("Mn^2+")} + 2H2O`,
+												`${b("HNO3")} + H^+ + e^- -> ${b("NO2")} + H2O`,
+												`${b("HNO3")} + 3H^+ + 3e^- -> ${b("NO")} + 2H2O`,
+												`${b("H2SO4")} + 2H^+ + 2e^- -> ${b("SO2")} + 2H2O`,
+												`${b("O3")} + 2H^+ + 2e^- -> ${b("O2")} + H2O`,
+												`${b("H2O2")} + 2H^+ + 2e^- -> ${b("2H2O")}`,
+												`${b("H2O2")} + 2e^- -> ${b("2OH^-")}`,
+												`${b("SO2")} + 4H^+ + 4e^- -> ${b("S")} + 2H2O`,
+												`${b("H2S")} -> ${b("S")} + 2H^+ + 2e^-`,
+												`${b("(COOH)2")} -> 2${b("CO2")} + 2H^+ + 2e^-`,
+												`2${b("I^-")} -> ${b("I2")} + 2e^-`,
+												`${b("Sn^2+")} -> ${b("Sn^4+")} + 2e^-`,
+												`${b("Fe^2+")} -> ${b("Fe^3+")} + e^-`,
+												`${b("Na")} -> ${b("Na^+")} + e^-`,
+												`${b("Mg")} -> ${b("Mg^2+")} + 2e^-`,
+												`${b("H2O2")} -> ${b("O2")} + 2H^+ + 2e^-`,
+												`${b("SO2")} + 2H2O -> ${b("SO4^2-")} + 4H^+ + 2e^-`,
+											 ]];
+					}
+						
+					var random = Math.floor(Math.random()*Question.all[0].length);
+					for (var n = 0; n < 2; n++) {
+						Question.now[n] = Question.all[n][random];
+					}
+					Question.all[0].splice(random,1)
+					Question.all[1].splice(random,1)
+					QText.textContent = Question.now[0];
+					AText.textContent = "";
+					renderMathInElement(QText)
+				}
+			}
+		</script>
+	</body>
+</html>
