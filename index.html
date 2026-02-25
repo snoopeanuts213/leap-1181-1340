@@ -117,7 +117,7 @@
 						if (fail == 2) {
 							ans += Question.now[1].at(0) + Question.now[1].at(1)
 							for (var i = 0; i < Question.now[1].length - 3; i++) ans += "*";
-							if (ans.length > 2) ans += Question.now[1].at(ans.length)
+							if (Question.now[1] > 2) ans += Question.now[1].at(ans.length)
 						} else {
 							ans = Question.now[1]
 						}
